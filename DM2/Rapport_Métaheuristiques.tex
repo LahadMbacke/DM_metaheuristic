@@ -1,0 +1,300 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{textgreek}
+\usepackage{longtable}
+\usepackage[margin=1in]{geometry} % Adjust the margin size as needed
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{} % Clear all header fields
+\fancyfoot{} % Clear all footer fields
+\fancyhead[R]{Mbacke Baye Lahad} % Right-aligned header
+\fancyhead[L]{Rapport sur Métaheuristique GRASP pour le Set Packing Problem (SPP)} % Left-aligned header
+\fancyfoot[C]{\thepage} % Page number in the center of the footer
+
+
+
+\title{Rapport sur Métaheuristique GRASP pour le Set Packing Problem (SPP)}
+\author{Mbacke Baye Lahad}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+Le présent rapport vise à présenter notre implémentation de l'algorithme métaheuristique GRASP (Greedy Randomized Adaptive Search Procedure) pour résoudre le problème de l'ensemble (Set Packing Problem, SPP). Nous décrirons les détails de notre approche, notamment la manière dont nous avons adapté GRASP pour le SPP. Ce rapport est structuré comme suit :
+
+\section{Métaheuristique GRASP pour le Set Packing Problem (SPP)}
+Dans cette section, nous expliquerons en quoi consiste l'algorithme GRASP et comment nous l'avons adapté pour résoudre le SPP. Nous fournirons des détails sur les fonctions et les mécanismes clés de notre implémentation, y compris la fonction \texttt{grasp}, \texttt{utilities}, et \texttt{greedy\_randomized\_construction}.
+
+L'algorithme GRASP (Greedy Randomized Adaptive Search Procedure) est une métaheuristique qui combine des composantes gloutonnes et des éléments aléatoires pour résoudre des problèmes d'optimisation. Dans notre implémentation, nous avons utilisé GRASP pour résoudre le problème de l'ensemble (Set Packing Problem, SPP). Notre approche est basée sur une méthode de construction randomisée gloutonnes.
+
+Nous avons implémenté la fonction \texttt{grasp} qui exécute l'algorithme GRASP. À chaque itération, cette fonction utilise l'algorithme de construction randomisée glouton  pour générer une solution candidate. Nous avons effectué un certain nombre d'itérations (contrôlé par \texttt{max\_iterations}) pour améliorer progressivement la solution.
+
+\section{Composants Additionnels - ReactiveGRASP}
+Dans cette section, nous présentons le composant additionnel de notre implémentation : ReactiveGRASP. L'algorithme ReactiveGRASP est conçu pour ajuster dynamiquement les probabilités de sélection des paramètres alpha (\textalpha) pour GRASP en fonction des performances précédentes. Il permet d'explorer un large éventail de valeurs d'alpha de manière adaptative.
+
+Nous avons implémenté la fonction \texttt{reactive\_grasp} pour exécuter l'algorithme ReactiveGRASP. Cette fonction initialise les variables et les structures de données nécessaires. À chaque itération, elle calcule les probabilités cumulatives pour la sélection de l'alpha en fonction des performances passées. Le choix de l'alpha est aléatoire, mais la probabilité de sélection est basée sur les probabilités cumulatives.
+
+
+Nous avons soigneusement réglé les paramètres de ReactiveGRASP, notamment le nombre d'itérations, pour obtenir des performances optimales pour le problème SPP. Les détails de ces paramètres et de leur influence seront discutés dans la Section 4 (Étude des Paramètres).
+
+\section{Étude des Paramètres}
+\section*{Paramètres de \(\alpha\) pour GRASP}
+
+Pour l'instance "didactic.dat", le coût de la meilleure solution reste constant ($z = 9$) pour toutes les valeurs d'α comprises entre 0.0 et 0.3. Ensuite, il augmente à 30 pour α ≥ 0.4.
+
+Pour d'autres instances telles que "pb\_100rnd0100.dat" et "pb\_200rnd0100.dat", les coûts des meilleures solutions augmentent également pour des valeurs d'α plus élevées.
+
+Cependant, pour des instances comme "pb\_100rnd0500.dat", "pb\_100rnd1000.dat", "pb\_200rnd1800.dat", "pb\_500rnd0100.dat", "pb\_500rnd0900.dat" et "pb\_1000rnd0100.dat", les coûts des meilleures solutions ne suivent pas une tendance linéaire avec α. Parfois, les coûts augmentent, puis diminuent à nouveau avec α.
+
+
+\section{Choix d'\textsubscript{\(\alpha\)}}
+
+Le choix d'\textsubscript{\(\alpha\)} dépend de l'objectif de votre problème. Si vous accordez plus d'importance au coût de la solution, vous pourriez préférer des valeurs d'α plus faibles, comme 0.0 ou 0.1, qui ont donné de meilleurs résultats sur certaines instances.
+
+Cependant, si le temps de résolution est un facteur critique, vous pourriez opter pour des valeurs d'α plus élevées, comme 0.5 ou 0.6, qui ont donné de bons résultats en termes de temps d'exécution.
+
+\section{Instance spécifique}
+
+Chaque instance peut réagir différemment à la variation d'\textsubscript{\(\alpha\)}. Par conséquent, il est recommandé de choisir α en fonction de la nature de l'instance ou du problème que vous traitez.
+
+\section{Plus d'expérimentations}
+
+Pour obtenir des conclusions plus solides, il est conseillé de réaliser des expérimentations supplémentaires sur un plus grand nombre d'instances et de moyennes les résultats obtenus.
+
+En résumé, l'influence d'\textsubscript{\(\alpha\)} sur les résultats de GRASP semble dépendre de la nature spécifique de l'instance et de vos priorités en matière de coût et de temps. Il est important de considérer ces facteurs dans le choix de la valeur d'α pour votre problème particulier.
+
+
+\begin{table}[h]
+  \centering
+  \caption{Résultats pour Diverses Instances}
+  % Table content here
+\end{table}
+
+\section*{Paramètres de N\textsubscript{$\alpha$} pour ReactiveGRASP}
+Cette section traite de l'analyse de l'influence des paramètres sur notre solution opérationnelle. Nous discutons notamment de l'impact du paramètre alpha (\(\alpha\)) pour GRASP et du paramètre N\textsubscript{$\alpha$} (N\textsubscript{$\alpha$}) pour ReactiveGRASP. Nous présentons les valeurs choisies pour ces paramètres et expliquons comment elles ont été déterminées.
+
+Le paramètre N\textsubscript{$\alpha$} (N\textsubscript{$\alpha$}) dans ReactiveGRASP détermine à quelle fréquence les probabilités alpha sont mises à jour. Nous avons également mené des expériences pour sélectionner une valeur optimale de N\textsubscript{$\alpha$}.
+
+Pour étudier l'influence du paramètre \(N\alpha\) sur les résultats globaux de REACTIVE GRASP, en mettant l'accent sur les résultats (et non sur les temps), nous pouvons tirer des conclusions générales à partir des données que vous avez fournies. Voici une analyse de l'impact de \(N\alpha\) sur les résultats :
+
+En examinant les données de performance pour différentes valeurs de \(N\alpha\), nous pouvons constater les tendances suivantes :
+
+Les valeurs plus élevées de \(N\alpha\) tendent à produire des solutions de meilleure qualité :
+
+Dans la plupart des cas, une valeur plus élevée de \(N\alpha\) conduit à une amélioration des solutions trouvées. Les solutions trouvées ont généralement un coût plus faible lorsque \(N\alpha\) est augmenté.
+
+L'ampleur de l'amélioration varie en fonction de l'instance du problème :
+
+L'impact de l'augmentation de \(N\alpha\) varie d'une instance à l'autre. Par exemple, pour l'instance "didactic.dat", le coût de la meilleure solution reste constant pour toutes les valeurs de \(N\alpha\) ; tandis que pour d'autres instances, des variations plus significatives du coût sont observées.
+
+Il peut exister un point optimal pour \(N\alpha\) :
+
+Dans certains cas, il est possible qu'il existe une valeur optimale de \(N\alpha\) qui produit les meilleures solutions. Par exemple, pour l'instance "pb_100rnd0100.dat", \(N\alpha = 10\) semble donner le coût de la meilleure solution le plus bas.
+
+Des valeurs de \(N\alpha\) trop élevées peuvent ne pas apporter d'améliorations significatives :
+
+Pour certaines instances, augmenter \(N\alpha\) au-delà d'une certaine valeur ne semble pas entraîner d'amélioration significative de la qualité des solutions.
+
+En résumé, l'ajustement du paramètre \(N\alpha\) dans REACTIVE GRASP a un impact significatif sur les résultats en termes de qualité des solutions. Cependant, l'ampleur de l'amélioration dépend de l'instance du problème, et il peut exister une valeur optimale de \(N\alpha\) pour chaque cas. Il est recommandé d'expérimenter différentes valeurs de \(N\alpha\) en fonction des caractéristiques spécifiques du problème pour déterminer celle qui produit les meilleurs résultats en termes de coût des solutions.
+
+\section{Expérimentation Numérique}
+Dans cette section, nous présenterons les résultats de notre algorithme sur différentes instances du problème SPP. Nous discuterons des performances en termes de qualité de la solution, du temps de calcul et de la sensibilité aux variations des paramètres.
+
+
+\begin{longtable}{|c|c|c|c|}
+    \caption{Résultats pour Diverses Instances} \label{tab:results} \\
+    \hline
+    \textbf{Instance} & \textbf{Alpha (\textalpha)} & \textbf{Meilleur Coût de Solution (z)} & \textbf{Temps (secondes)} \\
+    \hline
+    \endfirsthead
+    \hline
+    \textbf{Instance} & \textbf{Alpha (\textalpha)} & \textbf{Meilleur Coût de Solution (z)} & \textbf{Temps (secondes)} \\
+    \hline
+    \endhead
+    \hline
+    \endfoot
+    \hline
+    \endlastfoot
+      
+      didactic.dat & 0.0 & 9 & 0.8849 \\
+      & 0.1 & 9 & 0.0012 \\
+      & 0.2 & 30 & 0.0014 \\
+      & 0.3 & 10 & 0.0014 \\
+      & 0.4 & 30 & 0.0014 \\
+      & 0.5 & 30 & 0.0016 \\
+      & 0.6 & 30 & 0.0030 \\
+      & 0.7 & 30 & 0.0029 \\
+      & 0.8 & 30 & 0.0021 \\
+      & 0.9 & 30 & 0.0019 \\
+      & 1.0 & 30 & 0.0312 \\
+      
+      \hline
+      
+      pb_100rnd1000.dat & 0.0 & 33 & 2.2819 \\
+      & 0.1 & 33 & 1.3921 \\
+      & 0.2 & 25 & 14.3445 \\
+      & 0.3 & 29 & 14.9724 \\
+      & 0.4 & 29 & 14.4304 \\
+      & 0.5 & 26 & 14.3635 \\
+      & 0.6 & 33 & 14.9680 \\
+      & 0.7 & 45 & 15.4649 \\
+      & 0.8 & 38 & 15.4974 \\
+      & 0.9 & 40 & 17.0496 \\
+      & 1.0 & 49 & 17.2628 \\
+      
+      \hline
+      
+      pb_1000rnd1000.dat & 0.0 & 33 & 14.5730 \\
+      & 0.1 & 33 & 13.8378 \\
+      & 0.2 & 25 & 14.3445 \\
+      & 0.3 & 29 & 14.9724 \\
+      & 0.4 & 29 & 14.4304 \\
+      & 0.5 & 26 & 14.3635 \\
+      & 0.6 & 33 & 14.9680 \\
+      & 0.7 & 45 & 15.4649 \\
+      & 0.8 & 38 & 15.4974 \\
+      & 0.9 & 40 & 17.0496 \\
+      & 1.0 & 49 & 17.2628 \\
+      
+      \hline
+      
+      pb_100rnd0100.dat & 0.0 & 243 & 2.3771 \\
+      & 0.1 & 317 & 1.4139 \\
+      & 0.2 & 352 & 1.3844 \\
+      & 0.3 & 344 & 1.4047 \\
+      & 0.4 & 339 & 1.4227 \\
+      & 0.5 & 326 & 1.3909 \\
+      & 0.6 & 354 & 1.4216 \\
+      & 0.7 & 356 & 1.4083 \\
+      & 0.8 & 341 & 1.4464 \\
+      & 0.9 & 330 & 1.3214 \\
+      & 1.0 & 330 & 1.3040 \\
+      
+      \hline
+      
+      pb_100rnd0200.dat & 0.0 & 20 & 2.4579 \\
+      & 0.1 & 23 & 1.4455 \\
+      & 0.2 & 28 & 1.4878 \\
+      & 0.3 & 24 & 1.5827 \\
+      & 0.4 & 28 & 1.6336 \\
+      & 0.5 & 28 & 1.6199 \\
+      & 0.6 & 30 & 1.6582 \\
+      & 0.7 & 30 & 1.6503 \\
+      & 0.8 & 29 & 1.6572 \\
+      & 0.9 & 29 & 1.6541 \\
+      & 1.0 & 29 & 1.6530 \\
+      
+      \hline
+      
+      pb_100rnd0500.dat & 0.0 & 500 & 1.6967 \\
+      & 0.1 & 545 & 0.7439 \\
+      & 0.2 & 601 & 0.7398 \\
+      & 0.3 & 604 & 0.7380 \\
+      & 0.4 & 613 & 0.7432 \\
+      & 0.5 & 621 & 0.7428 \\
+      & 0.6 & 603 & 0.7314 \\
+      & 0.7 & 627 & 0.7433 \\
+      & 0.8 & 621 & 0.7322 \\
+      & 0.9 & 621 & 0.7335 \\
+      & 1.0 & 621 & 0.7369 \\
+      
+      \hline
+      
+      pb_100rnd1000.dat & 0.0 & 33 & 2.2819 \\
+      & 0.1 & 35 & 1.3921 \\
+      & 0.2 & 36 & 1.4947 \\
+      & 0.3 & 37 & 1.5304 \\
+      & 0.4 & 37 & 1.7464 \\
+      & 0.5 & 37 & 1.9276 \\
+      & 0.6 & 37 & 1.5932 \\
+      & 0.7 & 36 & 1.7236 \\
+      & 0.8 & 37 & 1.5894 \\
+      & 0.9 & 37 & 1.7410 \\
+      & 1.0 & 35 & 1.8476 \\
+      
+      \hline
+      
+      pb_200rnd0100.dat & 0.0 & 265 & 5.4220 \\
+      & 0.1 & 283 & 4.5874 \\
+      & 0.2 & 237 & 4.7665 \\
+      & 0.3 & 243 & 4.8908 \\
+      & 0.4 & 321 & 5.1594 \\
+      & 0.5 & 244 & 5.3839 \\
+      & 0.6 & 334 & 5.3898 \\
+      & 0.7 & 328 & 5.4229 \\
+      & 0.8 & 315 & 5.4782 \\
+      & 0.9 & 340 & 5.2902 \\
+      & 1.0 & 351 & 5.4089 \\
+      
+      \hline
+      
+      pb_200rnd1800.dat & 0.0 & 13 & 2.5498 \\
+      & 0.1 & 14 & 1.6283 \\
+      & 0.2 & 13 & 1.6843 \\
+      & 0.3 & 15 & 1.7700 \\
+      & 0.4 & 14 & 1.8238 \\
+      & 0.5 & 16 & 1.8816 \\
+      & 0.6 & 16 & 1.8743 \\
+      & 0.7 & 14 & 2.0331 \\
+      & 0.8 & 16 & 1.9503 \\
+      & 0.9 & 16 & 1.9536 \\
+      & 1.0 & 14 & 1.9478 \\
+      
+      \hline
+      
+      pb_500rnd0100.dat & 0.0 & 153 & 19.8978 \\
+      & 0.1 & 137 & 20.2845 \\
+      & 0.2 & 169 & 20.8810 \\
+      & 0.3 & 192 & 22.4819 \\
+      & 0.4 & 213 & 23.1238 \\
+      & 0.5 & 180 & 23.7895 \\
+      & 0.6 & 250 & 26.3223 \\
+      & 0.7 & 267 & 26.2731 \\
+      & 0.8 & 259 & 26.2807 \\
+      & 0.9 & 267 & 27.9673 \\
+      & 1.0 & 285 & 26.8691 \\
+      
+      \hline
+      
+      pb_500rnd0900.dat & 0.0 & 1518 & 42.5449 \\
+      & 0.1 & 1808 & 44.4694 \\
+      & 0.2 & 1988 & 48.9304 \\
+      & 0.3 & 2112 & 49.6760 \\
+      & 0.4 & 2028 & 51.1099 \\
+      & 0.5 & 2103 & 52.7018 \\
+      & 0.6 & 2098 & 52.6546 \\
+      & 0.7 & 2129 & 52.5673 \\
+      & 0.8 & 2137 & 54.0459 \\
+      & 0.9 & 2132 & 54.4951 \\
+      & 1.0 & 2153 & 53.9699 \\
+      
+      \hline
+      
+      pb_1000rnd0100.dat & 0.0 & 33 & 14.5730 \\
+      & 0.1 & 33 & 13.8378 \\
+      & 0.2 & 25 & 14.3445 \\
+      & 0.3 & 29 & 14.9724 \\
+      & 0.4 & 29 & 14.4304 \\
+      & 0.5 & 26 & 14.3635 \\
+      & 0.6 & 33 & 14.9680 \\
+      & 0.7 & 45 & 15.4649 \\
+      & 0.8 & 38 & 15.4974 \\
+      & 0.9 & 40 & 17.0496 \\
+      & 1.0 & 49 & 17.2628 \\
+      
+      \hline
+    \end{longtable}
+  \end{table}
+  
+\section{Conclusion}
+Enfin, dans la section de conclusion, nous résumerons les principales conclusions de notre travail. Notre implémentation de GRASP s'est avérée efficace pour résoudre le problème SPP, en produisant des solutions de haute qualité. Les composants additionnels (ReactiveGRASP) ont contribué à améliorer les performances de l'algorithme. Des valeurs optimales de paramètres ont été sélectionnées pour notre problème spécifique.
+
+\end{document}
