@@ -1,0 +1,37 @@
+# Projet d'Algorithme Génétique
+
+Ce projet utilise un algorithme génétique pour résoudre le problème de l'empaquetage d'ensembles (Set Packing Problem - SPP). Le code est écrit en Julia.
+
+## Explication du Code
+
+Le code comprend plusieurs fonctions qui mettent en œuvre différentes parties d'un algorithme génétique :
+
+- `calculate_fitness` : Cette fonction calcule la fitness d'un individu dans la population. La fitness est la somme des coefficients de l'individu. La fitness est réduite pour chaque contrainte qui n'est pas satisfaite.
+
+- `generate_population` : Cette fonction génère une population initiale aléatoire d'individus.
+
+- `rank_selection` : Cette fonction sélectionne les meilleurs individus en fonction de leurs valeurs de fitness.
+
+- `crossover` : Cette fonction effectue un croisement entre deux parents pour générer une progéniture.
+
+- `mutate_and_repair` : Cette fonction mute les individus et répare toute contrainte violée.
+
+- `genetic_algorithm` : C'est la fonction principale qui met en œuvre l'algorithme génétique. Elle initialise la population, calcule la fitness, effectue la sélection, le croisement et la mutation, et remplace l'ancienne population par la nouvelle.
+
+Le code comprend également une section de test où l'algorithme génétique est exécuté avec différentes valeurs de probabilité de mutation et de taille de population. La valeur de fitness maximale pour chaque génération est tracée pour chaque combinaison de probabilité de mutation et de taille de population.
+
+Le projet comprend aussi les fichiers `loadfile.js` et `getfname.jl` :
+
+- `loadfile.js` : Ce fichier permet de charger les données nécessaires pour l'algorithme.
+
+- `getfname.jl` : Ce fichier permet de récupérer le nom du fichier à partir duquel les données seront chargées.
+
+## Utilisation
+
+Pour utiliser ce code, vous devez avoir Julia installé sur votre machine. Vous pouvez exécuter le code en utilisant la commande suivante :
+
+```bash
+Positionnez-vous dans le terminal de Julia pour le lancez le code car il genere un grephique
+```
+julia test.jl : ce fichier permet de tester l'algorithme génétique avec différentes valeurs de probabilité de mutation et de taille de population.
+ julia main.jl : ce fichier permet d'exécuter l'algorithme génétique avec les paramètres par défaut. fixes à 0,1 et 100, respectivement.

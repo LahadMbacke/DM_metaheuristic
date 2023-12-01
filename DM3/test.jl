@@ -1,4 +1,3 @@
-
 using JuMP, GLPK
 using LinearAlgebra
 import Pkg
@@ -61,14 +60,23 @@ function mutate_and_repair(individual, mutation_probability, constraints)
     end
 end
 
+
+using Plots
+
 # Algorithme génétique
 function genetic_algorithm(coefficients, constraints, population_size, num_generations, mutation_probability)
     # Initialiser la population
     population = [rand(Bool, length(coefficients)) for _ in 1:population_size]
 
+    # Initialiser le tableau pour stocker la fitness maximale de chaque génération
+    max_fitness_values = []
+
     for generation in 1:num_generations
         # Calculer la fitness
         fitnesses = [calculate_fitness(individual, coefficients, constraints) for individual in population]
+
+        # Enregistrer la fitness maximale de cette génération
+        push!(max_fitness_values, maximum(fitnesses))
 
         # Sélection des parents et réalisation du croisement et de la mutation
         new_population = []
@@ -83,36 +91,49 @@ function genetic_algorithm(coefficients, constraints, population_size, num_gener
         population = new_population
     end
 
-    # Retourner la meilleure solution
+    # Retourner la meilleure solution et les valeurs de fitness maximales
     fitnesses = [calculate_fitness(individual, coefficients, constraints) for individual in population]
     best_index = argmax(fitnesses)
-    return population[best_index]
+    return population[best_index], max_fitness_values
 end
 # Charger les données depuis le fichier didactic.dat
-C, A, m, n = loadSPP("Data/pb_100rnd0100.dat")
+C, A, m, n = loadSPP("Data/pb_1000rnd0100.dat")
 constraints = [findall(A[i, :] .== 1) for i in 1:m]
-
-# Définir différentes configurations à expérimenter
-configurations = [
-    (population_size = 100, mutation_probability = 0.01),
-    (population_size = 200, mutation_probability = 0.02),
-    (population_size = 300, mutation_probability = 0.05)
-]
-
-# Définir le nombre maximum de générations
+# Exemple d'utilisation avec les données chargées
+# population_size = 500
 max_generations = 100
+# mutation_probability = 0.01
 
-# Boucle sur les configurations
-for config in configurations
-    population_size = config.population_size
-    mutation_probability = config.mutation_probability
+# solution, max_fitness_values = genetic_algorithm(C, constraints, population_size, max_generations, mutation_probability)
+# println("Solution finale : ", solution)
+# fitness = calculate_fitness(solution, C, constraints)
+# println("Fitness de la solution finale : ", fitness)
+# using Plots
 
-    println("Configuration: Population size = $population_size, Mutation probability = $mutation_probability")
+# Définir les valeurs de mutation_probability et population_size à tester
+mutation_probabilities = [0.001,0.01, 0.05, 0.1]
+population_sizes = [100, 500, 1000]
 
-    # Exécuter l'algorithme génétique avec la configuration actuelle
-    solution = genetic_algorithm(C, constraints, population_size, max_generations, mutation_probability)
-    
-    # Calculer et afficher la fitness de la solution obtenue
-    fitness = calculate_fitness(solution, C, constraints)
-    println("Fitness de la solution : $fitness\n")
+# Initialiser un graphique
+p = plot()
+
+# Pour chaque combinaison de mutation_probability et population_size
+for (mutation_prob, pop_size) in Iterators.product(mutation_probabilities, population_sizes)
+    # Exécuter l'algorithme génétique
+    global solution, max_fitness_values = genetic_algorithm(C, constraints, pop_size, max_generations, mutation_prob)
+
+    # Calculer la fitness de la solution
+    global fitness = calculate_fitness(solution, C, constraints)
+
+    # Imprimer la solution et sa fitness
+    println("Mutation Prob: $mutation_prob, Pop Size: $pop_size, Solution: $solution, Fitness: $fitness")
+
+    # Tracer la courbe de la fitness maximale en fonction des générations
+    plot!(p, 1:max_generations, max_fitness_values, label="Mutation Prob: $mutation_prob, Pop Size: $pop_size, Meill Solu: $fitness")
 end
+# Ajouter des labels aux axes
+xlabel!(p, "Generation")
+ylabel!(p, "Solutions")
+
+# Afficher le graphique
+display(p)

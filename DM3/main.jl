@@ -89,13 +89,13 @@ function genetic_algorithm(coefficients, constraints, population_size, num_gener
 end
 
 # Charger les données depuis le fichier didactic.dat
-C, A, m, n = loadSPP("Data/pb_100rnd0100.dat")
+C, A, m, n = loadSPP("Data/pb_500rnd0900.dat")
 constraints = [findall(A[i, :] .== 1) for i in 1:m]
 
 # Exemple d'utilisation avec les données chargées
 population_size = 500
-max_generations = 100
-mutation_probability = 0.01
+max_generations = 1000
+mutation_probability = 0.05
 
 solution = genetic_algorithm(C, constraints, population_size, max_generations, mutation_probability)
 println("Solution finale : ", solution)
